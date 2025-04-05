@@ -1,10 +1,25 @@
-import Image from "next/image";
+// import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
+  // In a real app, we would check authentication here
+  // For demo purposes, we'll just redirect to the dashboard
+  // redirect("/dashboard");
+
   return (
-    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
-      <h1>Welcome to the Project Management App!</h1>
-      <p>Start by managing your projects and tasks.</p>
-    </div>
+    <main className='flex min-h-screen flex-col items-center justify-center p-24'>
+      <div className='z-10 max-w-5xl w-full items-center justify-between font-mono text-sm'>
+        <h1 className='text-4xl font-bold'>Project Management System</h1>
+        <div className='mt-8 flex gap-4'>
+          <Button asChild>
+            <Link href='/login'>Login</Link>
+          </Button>
+          <Button asChild variant='outline'>
+            <Link href='/register'>Register</Link>
+          </Button>
+        </div>
+      </div>
+    </main>
   );
 }
