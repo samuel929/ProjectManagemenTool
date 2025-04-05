@@ -1,13 +1,15 @@
-name: Node.js CI with Redis
+name: Monorepo CI - Backend & Frontend
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  build-test:
+  backend:
+    name: 🛠️ Backend Build & Test
     runs-on: ubuntu-latest
     services:
       redis:
@@ -24,16 +26,54 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name: 🟢 Use Node.js
+      - name: 📂 Change to backend folder
+        working-directory: ./backend
+        run: |
+          echo "Inside backend folder"
+
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # or whatever version you use
+          node-version: '18'
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install backend dependencies
+        working-directory: ./backend
         run: npm ci
 
-      - name: 🔍 Run tests
+      - name: 🔍 Run backend tests
+        working-directory: ./backend
         run: npm test
 
-      - name: 🏗️ Build the project
+      - name: 🏗️ Build backend
+        working-directory: ./backend
         run: npm run build
+
+  frontend:
+    name: 💻 Frontend Build (Next.js)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: 🔍 Run frontend tests (Jest)
+        working-directory: ./frontend
+        run: npm test
+
+      - name: 🏗️ Build frontend (Next.js)
+        working-directory: ./frontend
+        run: npm run build
+
+      # Optional: Run Jest with coverage for frontend
+      - name: 📊 Run Jest with Coverage (Frontend)
+        working-directory: ./frontend
+        run: npm run test:coverage

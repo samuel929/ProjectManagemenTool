@@ -12,7 +12,6 @@ jest.mock('redis', () => ({
   
   test('mock redis pub/sub', async () => {
     const logSpy = jest.spyOn(console, 'log');
-    require('../services/notificationService');
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('📣 Notify User'));
   });
   
