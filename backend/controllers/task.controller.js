@@ -1,5 +1,6 @@
-import {Task} from '../models//task.model.js';
-
+import {Task} from '../models/task.model.js';
+import {checkProjectCompletionStatus} from '../utils/checkProjectStatus.js';
+import redisClient from '../config/redis.js';
 export const createTask = async (req, res) => {
      const { title, description, status, assignee, project } = req.body;
     
@@ -15,7 +16,21 @@ export const createTask = async (req, res) => {
           assignee,
           project
         });
-    
+        await checkProjectCompletionStatus(project || updatedTask.project)
+        await redisClient.publish('task-events', JSON.stringify({
+          type: 'task-assigned',
+          userId: assignee,
+          message: `You have been assigned a task: ${title}`
+        }));
+        
+        // For status update
+        if (statusChanged) {
+          await redisClient.publish('task-events', JSON.stringify({
+            type: 'status-updated',
+            userId: assignee,
+            message: `Status changed for task: ${title}`
+          }));
+        }
         res.status(201).json(newTask);
       } catch (err) {
         res.status(500).json({ error: err.message });
@@ -45,6 +60,7 @@ export const updateTask = async (req, res) => {
       );
   
       if (!updatedTask) return res.status(404).json({ error: 'Task not found' });
+      await checkProjectCompletionStatus(updatedTask.project)
       res.json(updatedTask);
     } catch (err) {
       res.status(500).json({ error: err.message });
