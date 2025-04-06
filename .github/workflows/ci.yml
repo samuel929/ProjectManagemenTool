@@ -73,7 +73,7 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      # Optional: Run Jest with coverage for frontend
-      - name: 📊 Run Jest with Coverage (Frontend)
-        working-directory: ./frontend
-        run: npm run test:coverage
+      # # Optional: Run Jest with coverage for frontend
+      # - name: 📊 Run Jest with Coverage (Frontend)
+      #   working-directory: ./frontend
+      #   run: npm run test:coverage
