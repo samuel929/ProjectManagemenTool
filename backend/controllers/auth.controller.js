@@ -204,3 +204,14 @@ export const checkAuth = async (req, res) => {
 		res.status(400).json({ success: false, message: error.message });
 	}
 };
+
+
+export const getUsers = async (req, res) => {
+	try {
+		const users = await User.find().select("-password");
+		res.status(200).json({ success: true, users });
+	} catch (error) {
+		console.log("Error in getUsers ", error);
+		res.status(400).json({ success: false, message: error.message });
+	}
+};

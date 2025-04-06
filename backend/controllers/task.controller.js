@@ -24,7 +24,7 @@ export const createTask = async (req, res) => {
         }));
         
         // For status update
-        if (statusChanged) {
+        if (status) {
           await redisClient.publish('task-events', JSON.stringify({
             type: 'status-updated',
             userId: assignee,

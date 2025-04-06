@@ -6,6 +6,5 @@ subscriber.connect().then(() => {
   subscriber.subscribe('task-events', (message) => {
     const data = JSON.parse(message);
     console.log(`📣 Notify User ${data.userId}: ${data.message}`);
-    // In future: send email, push, or WebSocket notification
   });
 });
