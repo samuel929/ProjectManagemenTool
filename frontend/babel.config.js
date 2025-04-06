@@ -1,10 +1,12 @@
-// babel.config.js
 module.exports = {
-    presets: [
-      'next/babel', // For Next.js JSX/TSX handling
-      '@babel/preset-env',
-      '@babel/preset-react',
-      '@babel/preset-typescript', // For handling TypeScript
-    ],
+    presets: [['next/babel', {
+      'preset-react': {
+        runtime: 'automatic',
+        importSource: '@emotion/react' // Only if using Emotion
+      }
+    }]],
+    plugins: [
+      // Only include essential Babel plugins here
+      // '@emotion/babel-plugin' // Uncomment if using Emotion
+    ]
   };
-  

@@ -1,6 +1,5 @@
 "use client";
 
-import type React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -17,29 +16,53 @@ import {
 } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import { login } from "@/util/api";
+import useStore from "@/store/useStore";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { setUser } = useStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // Simulate API call with mock data
-      const user = await login(email, password);
-      if (user) {
-        toast("Login successful");
+      const response = await login(email, password);
+
+      if (response.status === 200) {
+        // Set user in Zustand store
+        setUser(response.data.user);
+
+        // Store token in cookies (secure HttpOnly cookie)
+        document.cookie = `token=${
+          response.data.token
+        }; path=/; secure; samesite=strict${
+          process.env.NODE_ENV === "production" ? "; httponly" : ""
+        }`;
+
+        toast.success("Login successful");
         router.push("/dashboard");
       } else {
-        toast("Login failed");
+        toast.error(response.data?.message || "Login failed");
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast("Login failed");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "An error occurred during login"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -65,17 +88,12 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                autoComplete='username'
               />
             </div>
             <div className='space-y-2'>
               <div className='flex items-center justify-between'>
                 <Label htmlFor='password'>Password</Label>
-                <Link
-                  href='/forgot-password'
-                  className='text-sm text-primary underline-offset-4 hover:underline'
-                >
-                  Forgot password?
-                </Link>
               </div>
               <Input
                 id='password'
@@ -83,6 +101,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete='current-password'
               />
             </div>
           </CardContent>

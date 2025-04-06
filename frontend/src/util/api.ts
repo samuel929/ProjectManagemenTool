@@ -1,4 +1,4 @@
-// import { Project, Task } from '@/store/useStore';
+import { Project } from '@/store/useStore';
 import axios, { AxiosInstance } from 'axios';
 
 
@@ -10,7 +10,6 @@ const api: AxiosInstance = axios.create({
     },
 });
 
-// Optional: Add interceptors to handle tokens, etc.
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token'); // Replace with your token handling method
@@ -53,4 +52,45 @@ export const checkAuth = async () => {
     return api.get('/auth/check-auth');
 }
 
+
+//projects
+export const getProjects = async () => {
+    return api.get('/projects/');
+}
+
+export const createProject = async (title: string, description: string, deadline: string, userId: string) => {
+    return api.post('/projects/', { title, description, deadline, userId });
+};
+
+export const deleteProject = async (projectId: string) => {
+    return api.delete(`/projects/${projectId}`);
+}
+
+export const getTasks = async (projectId: string) => {
+    return api.get(`/tasks/project/${projectId}`);
+}
+
+export const getAllTasks = async () => {
+    const projectsData = await getProjects();
+    const projectIds = projectsData.data.map((p: Project) => p._id);
+
+    const taskPromises = projectIds.map((id: string) => getTasks(id));
+    const tasksData = await Promise.all(taskPromises);
+
+    return tasksData.flatMap((res) => res.data);
+};
+
+
+//get Tasks
+export const deleteTask = async (taskId: string) => {
+    return api.delete(`/tasks/${taskId}`);
+}
+
+export const createTask = async (title: string, description: string, status: string, assignee: string, project: string) => {
+    return api.post('/tasks/', { title, description, status, assignee, project });
+};
+export const getUsers = async () => {
+    return api.get('/auth/get-users');
+
+}
 export default api;

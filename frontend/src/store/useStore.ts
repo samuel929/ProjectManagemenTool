@@ -1,10 +1,21 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-// Define types for user, project, and task
 export interface User {
-    id: string;
+    _id: string;
     name: string;
     email: string;
+    password?: string;
+    lastLogin?: string;
+    isVerified: boolean;
+    role: 'developer' | 'project-manager' | 'admin';
+    resetPasswordToken?: string;
+    resetPasswordExpiresAt?: string;
+    verificationToken?: string;
+    verificationTokenExpiresAt?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
 }
 
 export interface Project {
@@ -12,6 +23,10 @@ export interface Project {
     title: string;
     description: string;
     deadline: string;
+    createdBy: User;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
 }
 
 export interface Task {
@@ -19,30 +34,62 @@ export interface Task {
     title: string;
     description: string;
     status: 'To Do' | 'In Progress' | 'Done';
-    assignee: string;
+    assignee: User;
+    project: Project;
+    createdAt?: string;
+    updatedAt?: string;
+    __v?: number;
 }
 
-// Define the Zustand store type
 interface Store {
     user: User | null;
     projects: Project[];
     tasks: Task[];
 
-    // Actions to update state
     setUser: (user: User | null) => void;
     setProjects: (projects: Project[]) => void;
     setTasks: (tasks: Task[]) => void;
+    addProject: (project: Project) => void;
+    addTask: (task: Task) => void;
+    updateTaskStatus: (taskId: string, status: 'To Do' | 'In Progress' | 'Done') => void;
 }
 
-// Create the store with types
-const useStore = create<Store>((set) => ({
-    user: null,
-    projects: [],
-    tasks: [],
+const useStore = create<Store>()(
+    persist(
+        (set) => ({
+            user: null,
+            projects: [],
+            tasks: [],
 
-    setUser: (user) => set({ user }),
-    setProjects: (projects) => set({ projects }),
-    setTasks: (tasks) => set({ tasks }),
-}));
+            setUser: (user) => set({ user }),
+            setProjects: (projects) => set({ projects }),
+            setTasks: (tasks) => set({ tasks }),
+
+            addProject: (project) => set((state) => ({
+                projects: [...state.projects, project]
+            })),
+
+            addTask: (task) => set((state) => ({
+                tasks: [...state.tasks, task]
+            })),
+
+            updateTaskStatus: (taskId, status) =>
+                set((state) => ({
+                    tasks: state.tasks.map(task =>
+                        task._id === taskId ? { ...task, status } : task
+                    )
+                })),
+        }),
+        {
+            name: 'user-storage',
+            partialize: (state) => ({
+                user: state.user,
+            }),
+        }
+    )
+);
 
 export default useStore;
+
+
+
