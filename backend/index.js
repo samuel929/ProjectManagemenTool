@@ -15,9 +15,26 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const __dirname = path.resolve();
 
-app.use(cors({ origin: "http://localhost:3000", methods: "GET,POST,PUT,DELETE,OPTIONS",
-	credentials: true }));
+const allowedOrigins = [
+	'http://localhost:3000',
+	'https://project-managemen-tool.vercel.app'
+  ];
+  
+  app.use(cors({
+	origin: function (origin, callback) {
+	  // allow requests with no origin (like mobile apps or curl)
+	  if (!origin) return callback(null, true);
+	  if (allowedOrigins.includes(origin)) {
+		return callback(null, true);
+	  } else {
+		return callback(new Error('Not allowed by CORS'));
+	  }
+	},
+	methods: "GET,POST,PUT,DELETE,OPTIONS",
+	credentials: true
+  }));
 
+  
 app.use(express.json()); // allows us to parse incoming requests:req.body
 app.use(cookieParser()); // allows us to parse incoming cookies
 
