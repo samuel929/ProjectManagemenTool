@@ -45,6 +45,7 @@ npm run dev
 ```
 
 🧪 Run Tests
+
 ```
 npm test
 ```
@@ -109,10 +110,12 @@ Jest or React Testing Library (testing)
 
 ```
 cd frontend
-npm install
+npm install --legacy-peer-deps
 npm run dev
 ```
+
 🧪 Run Tests
+
 ```
 npm test
 ```
@@ -134,6 +137,7 @@ Build Projects
 Redis Service for backend tests
 
 🖥️ Pipeline Config Overview
+
 ```
 jobs:
   backend:
@@ -144,7 +148,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci && npm test && echo "Build JS Backend"
-  
+
   frontend:
     runs-on: ubuntu-latest
     steps:

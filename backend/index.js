@@ -15,7 +15,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const __dirname = path.resolve();
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: "http://localhost:3000", methods: "GET,POST,PUT,DELETE,OPTIONS",
+	credentials: true }));
 
 app.use(express.json()); // allows us to parse incoming requests:req.body
 app.use(cookieParser()); // allows us to parse incoming cookies
@@ -32,9 +33,11 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
 	connectDB();
-	console.log("Server is running on port: ", PORT);
-});
+	console.log(`Server is running on http://0.0.0.0:${PORT}`);
+  }).on('error', (err) => {
+	console.error('Server failed to start:', err);
+  });
 
 export default app;
