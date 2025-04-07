@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === "production") {
 	});
 }
 
+// connection to MongoDB
 app.listen(PORT, "0.0.0.0", () => {
 	connectDB();
 	console.log(`Server is running on http://0.0.0.0:${PORT}`);
