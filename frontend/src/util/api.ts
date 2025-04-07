@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 
 
 const api: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api', // Change this to your backend URL
+    baseURL: 'https://projectmanagementool.fly.dev/api',
     timeout: 10000, // Timeout after 10 seconds
     headers: {
         'Content-Type': 'application/json',
