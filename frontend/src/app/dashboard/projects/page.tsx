@@ -22,12 +22,13 @@ import { Plus, Search, Trash2 } from "lucide-react";
 import { deleteProject, createProject, getAllTasks } from "@/util/api";
 import { getProjects } from "@/util/api";
 import { toast } from "react-toastify";
+import { AppState, Project, Task } from "@/types/types";
 
 export default function ProjectsPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AppState>();
   const [mounted, setMounted] = useState(false);
-  const [projects, setProjects] = useState<any[]>([]);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [newProject, setNewProject] = useState({
@@ -111,7 +112,7 @@ export default function ProjectsPage() {
         user.state.user._id
       );
 
-      setProjects([...projects, createdProject]);
+      setProjects([...projects, createdProject.data]);
       setNewProject({ title: "", description: "", deadline: "" });
       setIsDialogOpen(false);
       toast("Your new project has been created successfully");

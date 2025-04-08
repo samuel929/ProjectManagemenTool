@@ -36,14 +36,15 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "react-toastify";
+import { AppState } from "@/types/types";
+import { getInitials } from "@/util/util";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>();
+  const [user, setUser] = useState<AppState>();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -69,13 +70,6 @@ export default function DashboardLayout({
     return null;
   }
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
   return (
     <SidebarProvider>
       <div className='flex h-screen overflow-hidden'>

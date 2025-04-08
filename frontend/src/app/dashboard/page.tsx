@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -23,8 +24,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import useStore from "@/store/useStore";
 import { getAllTasks, getProjects, getUsers } from "@/util/api";
-import { Project, Task, User } from "@/store/useStore";
 import { toast } from "react-toastify";
+import { getStatusColor } from "@/util/util";
+import { Project, Task, User } from "@/types/types";
 
 export default function DashboardPage() {
   const { user } = useStore();
@@ -48,7 +50,6 @@ export default function DashboardPage() {
         setUsers(usersData.data.users);
         setTasks(tasksData);
       } catch (error) {
-        console.error("Error fetching data:", error);
         toast("Failed to load data. Please try again later.");
       } finally {
         setLoading(false);
@@ -112,21 +113,6 @@ export default function DashboardPage() {
     (task) => task.status === "In Progress"
   ).length;
   const todoTasks = userTasks.filter((task) => task.status === "To Do").length;
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "To Do":
-        return "bg-blue-500";
-      case "In Progress":
-        return "bg-yellow-500";
-      case "Done":
-        return "bg-green-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
-  console.log(projects);
 
   return (
     <div className='space-y-6'>

@@ -36,9 +36,8 @@ if (process.env.NODE_ENV === "production") {
 // connection to MongoDB
 app.listen(PORT, "0.0.0.0", () => {
 	connectDB();
-	console.log(`Server is running on http://0.0.0.0:${PORT}`);
   }).on('error', (err) => {
-	console.error('Server failed to start:', err);
+	process.exit(1); 
   });
 
 export default app;

@@ -9,7 +9,7 @@ on:
 
 jobs:
   backend:
-    name: 🛠️ Backend Build & Test
+    name: 🛠️ Backend Build, Test & Deploy
     runs-on: ubuntu-latest
     services:
       redis:
@@ -28,8 +28,7 @@ jobs:
 
       - name: 📂 Change to backend folder
         working-directory: ./backend
-        run: |
-          echo "Inside backend folder"
+        run: echo "Inside backend folder"
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v3
@@ -40,13 +39,15 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
-      # - name: 🔍 Run backend tests
-      #   working-directory: ./backend
-      #   run: npm test
-
       - name: 🏗️ Build backend
         working-directory: ./backend
         run: npm run build
+
+      - name: 🚀 Deploy to Fly.io
+        working-directory: ./backend
+        run: flyctl deploy --app projectmanagementool
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
   frontend:
     name: 💻 Frontend Build (Next.js)
@@ -65,15 +66,10 @@ jobs:
         working-directory: ./frontend
         run: npm ci --legacy-peer-deps
 
-      # - name: 🔍 Run frontend tests (Jest)
-      #   working-directory: ./frontend
-      #   run: npm test
-
       - name: 🏗️ Build frontend (Next.js)
         working-directory: ./frontend
         run: npm run build
-
-      # # Optional: Run Jest with coverage for frontend
-      # - name: 📊 Run Jest with Coverage (Frontend)
-      #   working-directory: ./frontend
-      #   run: npm run test:coverage
+      
+      - name: 🚀 Deploy to Vercel
+        working-directory: ./frontend
+        run: vercel --prod --token=${{ secrets.VERCEL_AUTH_TOKEN }}

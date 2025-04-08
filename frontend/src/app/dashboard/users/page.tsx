@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -11,11 +11,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Search, Mail, UsersIcon } from "lucide-react";
 import { toast } from "react-toastify";
-import { User } from "@/store/useStore";
+import { AppState, User } from "@/types/types";
+import { getInitials, getRoleBadgeVariant } from "@/util/util";
 
 export default function UsersPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<AppState>();
   const [mounted, setMounted] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,6 @@ export default function UsersPage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         toast.error("Failed to fetch users");
-        console.error("Error fetching users:", err);
       } finally {
         setLoading(false);
       }
@@ -70,23 +69,6 @@ export default function UsersPage() {
     );
   });
 
-  const getInitials = (name: string) =>
-    name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-
-  const getRoleBadgeVariant = (role: string) => {
-    switch (role) {
-      case "Admin":
-        return "destructive";
-      case "Project Manager":
-        return "default";
-      default:
-        return "secondary";
-    }
-  };
   return (
     <div className='space-y-6'>
       <div className='flex flex-col sm:flex-row items-center justify-between gap-4'>
