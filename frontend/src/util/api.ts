@@ -1,4 +1,4 @@
-import { Project } from '@/store/useStore';
+import { Project } from '@/types/types';
 import axios, { AxiosInstance } from 'axios';
 
 
