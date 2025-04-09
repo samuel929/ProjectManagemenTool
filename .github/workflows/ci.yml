@@ -43,11 +43,11 @@ jobs:
         working-directory: ./backend
         run: npm run build
 
-      - name: 🚀 Deploy to Fly.io
-        working-directory: ./backend
-        run: npm run deploy:fly
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      # - name: 🚀 Deploy to Fly.io
+      #   working-directory: ./backend
+      #   run: npm run deploy:fly
+      #   env:
+      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
   frontend:
     name: 💻 Frontend Build (Next.js)
@@ -70,6 +70,6 @@ jobs:
         working-directory: ./frontend
         run: npm run build
       
-      - name: 🚀 Deploy to Vercel
-        working-directory: ./frontend
-        run: vercel --prod --token=${{ secrets.VERCEL_AUTH_TOKEN }}
+      # - name: 🚀 Deploy to Vercel
+      #   working-directory: ./frontend
+      #   run: vercel --prod --token=${{ secrets.VERCEL_AUTH_TOKEN }}
