@@ -1,4 +1,4 @@
-import { Project } from '@/store/useStore';
+import { Project } from '@/types/types';
 import axios, { AxiosInstance } from 'axios';
 
 
@@ -12,7 +12,7 @@ const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token'); // Replace with your token handling method
+        const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -52,6 +52,11 @@ export const checkAuth = async () => {
     return api.get('/auth/check-auth');
 }
 
+export const getUsers = async () => {
+    return api.get('/auth/get-users');
+
+}
+
 
 //projects
 export const getProjects = async () => {
@@ -89,8 +94,5 @@ export const deleteTask = async (taskId: string) => {
 export const createTask = async (title: string, description: string, status: string, assignee: string, project: string) => {
     return api.post('/tasks/', { title, description, status, assignee, project });
 };
-export const getUsers = async () => {
-    return api.get('/auth/get-users');
 
-}
 export default api;

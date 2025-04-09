@@ -43,14 +43,15 @@ import {
   getProjects,
   getUsers,
 } from "@/util/api";
-import { Project, Task, User } from "@/store/useStore";
+import { AppState, Project, Task, User } from "@/types/types";
+import { getInitials, getStatusColor } from "@/util/util";
 
 export default function ProjectDetailsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppState | null>(null);
   const [mounted, setMounted] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [project, setProject] = useState<Project | null>(null);
@@ -180,26 +181,6 @@ export default function ProjectDetailsPage({
     await deleteTask(taskId);
     setTasks(tasks.filter((task) => task._id !== taskId));
     toast.success("The task has been deleted successfully");
-  };
-
-  const getInitials = (name: string) =>
-    name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "To Do":
-        return "bg-blue-500";
-      case "In Progress":
-        return "bg-yellow-500";
-      case "Done":
-        return "bg-green-500";
-      default:
-        return "bg-gray-500";
-    }
   };
 
   const getCompletionStatusColor = () =>
